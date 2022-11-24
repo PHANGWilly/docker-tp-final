@@ -1,0 +1,72 @@
+version: '3.7'
+services:
+
+  db:
+    image: mysql:5.7
+    ports:
+     - 3306:3306
+    container_name: db
+    environment:
+     MYSQL_ROOT_PASSWORD: root
+     MYSQL_DATABASE: projet-final
+     MYSQL_USER: admin
+     MYSQL_PASSWORD: admin
+    volumes:
+      - dbdata:/var/lib/mysql
+
+  php-1:
+    build: './php/'
+    ports : 
+      - 9000
+    volumes:
+      - './site-1:/var/www/html/'
+    depends_on:
+      - db
+
+  php-2:
+    build: ./php/
+    ports : 
+      - 9000
+    volumes:
+      - './site-2:/var/www/html/'
+    depends_on:
+      - db
+
+  nginx-1:
+    build: 
+      context: ./nginx/
+      args: 
+        - FILE_NAME=nginx-1.conf 
+    ports:
+      - 4001:80
+    volumes:
+      - './site-1:/var/www/html/'
+    depends_on:
+      - db
+
+  nginx-2:
+    build: 
+      context: ./nginx/
+      args: 
+      - FILE_NAME=nginx-2.conf 
+    ports:
+      - 4002:80
+    volumes:
+      - './site-2:/var/www/html/'
+    depends_on:
+      - db
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: phpmyadmin
+    links:
+      - db
+    environment:
+      PMA_HOST: db
+      PMA_PORT: 3306
+      PMA_ARBITRARY: 1
+    restart: always
+    ports:
+      - 8001:80
+volumes:
+  dbdata: 
