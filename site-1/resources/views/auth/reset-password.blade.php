@@ -5,7 +5,7 @@
                 <x-application-logo class="w-20 h-20 fill-current text-gray-500" />
             </a>
         </x-slot>
-
+        <h1>Serveur 1</h1><br>
         <form method="POST" action="{{ route('password.update') }}">
             @csrf
 

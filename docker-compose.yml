@@ -1,11 +1,11 @@
 version: '3.7'
 services:
 
-  db:
+  data_base:
     image: mysql:5.7
     ports:
      - 3306:3306
-    container_name: db
+    container_name: data_base
     environment:
      MYSQL_ROOT_PASSWORD: root
      MYSQL_DATABASE: projet-final
@@ -21,7 +21,7 @@ services:
     volumes:
       - './site-1:/var/www/html/'
     depends_on:
-      - db
+      - data_base
 
   php-2:
     build: ./php/
@@ -30,7 +30,7 @@ services:
     volumes:
       - './site-2:/var/www/html/'
     depends_on:
-      - db
+      - data_base
 
   nginx-1:
     build: 
@@ -42,7 +42,7 @@ services:
     volumes:
       - './site-1:/var/www/html/'
     depends_on:
-      - db
+      - data_base
 
   nginx-2:
     build: 
@@ -54,13 +54,13 @@ services:
     volumes:
       - './site-2:/var/www/html/'
     depends_on:
-      - db
+      - data_base
 
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
     container_name: phpmyadmin
     links:
-      - db
+      - data_base
     environment:
       PMA_HOST: db
       PMA_PORT: 3306
